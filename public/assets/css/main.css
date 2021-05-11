@@ -399,6 +399,75 @@ ul.actions li:last-child {
 
 
 /*==========================================================================
+    split2 to split sections in half FOR LOGIN/REGISTRATION
+==========================================================================*/
+
+.split2nav {
+    -moz-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 2em;
+}
+
+.split2nav img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.split2nav>* {
+    width: 50%;
+}
+
+.split2nav>:nth-child(odd) {
+    padding-right: 3em;
+}
+
+.split2nav>:nth-child(even) {
+    border-left: solid 2px;
+    padding-left: 3em;
+}
+
+.split2nav>*>:last-child,
+.split2nav>*>:last-child>:last-child,
+.split2nav>*>:last-child>:last-child>:last-child {
+    margin-bottom: 0;
+}
+
+@media screen and (max-width:980px) {
+    .split2nav>:nth-child(odd) {
+        padding-right: 2em;
+    }
+    .split2nav>:nth-child(even) {
+        padding-left: 2em;
+    }
+}
+
+@media screen and (max-width:736px) {
+    .split2nav {
+        padding-bottom: 0;
+    }
+    .split2nav>* {
+        margin-bottom: 2em;
+        width: 100%;
+    }
+    .split2nav>:nth-child(odd) {
+        padding-right: 0;
+    }
+    .split2nav>:nth-child(even) {
+        border-left: none;
+        padding-left: 0;
+    }
+}
+
+
+/*==========================================================================
     split4 to split sections into fourths
 ==========================================================================*/
 
@@ -852,7 +921,7 @@ ul.actions li:last-child {
 
 
 /*==========================================================================
-    Login
+    Login/Registration
 ==========================================================================*/
 
 input {
@@ -961,4 +1030,13 @@ button.alt:hover {
 .button.alt:active,
 button.alt:active {
     background-color: rgba(144, 144, 144, .2);
+}
+
+
+/*==========================================================================
+    Nav bar image
+==========================================================================*/
+
+.navImage {
+    width: 6.5%;
 }
