@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title><%= clubName %></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--================================================================
+        Scripts
+    =================================================================-->
+    <link rel="stylesheet" href="assets/css/normalise.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="assets/js/main.js" defer></script>
+</head>
+
+<body>
+    <!--================================================================
+        Navigation Bar
+    =================================================================-->
+    <nav id="navbar">
+        <a href="/@<%= clubName %>">Return Back to Club Page</a>
+        <a href="/register" class="rightsideText">Sign Up</a>
+        <a href="/login" class="rightsideText">Log in</a>
+    </nav>
+    <!--================================================================
+        Intro/Logo
+    =================================================================-->
+    <div id="banner">
+        <!--  <h2>LOGO? WEBSITE NAME?</h2> -->
+        <img src="images/logo.png" class="logo" alt="Football logo">
+        <p>A repository for reporting sports results</p>
+    </div>
+    <!--================================================================
+        Previous Matches
+    =================================================================-->
+    <div id="previousmatches" class="wrapper">
+        <h2>All Match Results This Season for <%= clubName %></h2>
+            <div>
+                <ul class="checklist">
+                     <% for(let i =0;i < data.length; i++){ %>
+                        <li> <%= matchDate[i] %> </li>
+                        <li> <%= data[i] %> </li>
+                        <li> ~~~~~~~~~~~~~~~~~~~~~</li>
+                     <% } %>
+                </ul>
+            </div>
+        
+    </div>
+</body>
+</html>
