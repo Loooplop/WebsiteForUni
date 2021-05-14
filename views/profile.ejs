@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Live Football Premier League</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--================================================================
+        Scripts
+    =================================================================-->
+    <link rel="stylesheet" href="assets/css/normalise.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="assets/js/main.js" defer></script>
+</head>
+
+<body id="formbanner">
+    <!--================================================================
+        Sign up
+    =================================================================-->
+    <div class="inner split2nav">
+        <div class="formwrapper">
+            <h1 class="logintextbig">Profile</h1>
+            <class="logintext">Username: <%= user %><br>
+            <class="logintext">Current Favourite Team: <%= team %><br>
+            <h1 class="logintextbig">Settings</h1>
+            
+            
+            <form action="updateSettings" method="POST">
+                <label for="team">Please enter the name of the team you wish to favourite from the premier league:</label><br>
+                <input type="text" class="roundedcorners" id="team" name="team" placeholder="Team Name"><br>
+                <input type="submit" value="Confirm" class="button alt">
+            </form>
+            
+            
+            <form action="logout" method="POST">
+                <input type="submit" value="logout" class="button alt">
+            </form>
+            
+            <form action="delete" method="POST">
+                <input type="submit" value="Delete Account and Logout" class="button alt">
+            </form>
+        </div>
+        <div>
+            <img src="images/logo.png" class="logo" alt="Football logo">
+        </div>
+    </div>
+</body>
+
+</html>

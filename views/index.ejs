@@ -19,10 +19,16 @@
     =================================================================-->
     <nav id="navbar">
         <!--sidebar button-->
-        <a><span id="openbt">&#9776;</span></a>
-        <img src="images/logoBar.png" >
-        <a href="/register" class="rightsideText">Sign Up</a>
-        <a href="/login" class="rightsideText">Log in</a>
+        <% if (log == false) { %>
+            <a><span id="openbt">&#9776;</span></a>
+            <img src="images/logoBar.png" >
+            <a href="/register" class="rightsideText">Sign Up</a>
+            <a href="/login" class="rightsideText">Log in</a>
+        <% } else {%>
+            <a><span id="openbt">&#9776;</span></a>
+            <img src="images/logoBar.png" >
+            <a href="/profile" class="rightsideText">Profile:<%= user %></a>
+        <% } %>
     </nav>
     <!--================================================================
         Side Bar
@@ -66,7 +72,7 @@
                 <h2>MOST RECENT MATCH</h2>
             </div>
             <div>
-                <h2><%= dates[0] %>: <%=matchData[0] %></h2>
+                <h2><%= dates[0] %>: <img src=images/<%= TeamA[0] %>Icon.svg width='50px' height='50px' /><%= matchData[0] %><img src=images/<%= TeamB[0] %>Icon.svg width='50px' height='50px' /></h2>
             </div>
         </div>
     </div>
@@ -90,12 +96,12 @@
             <div>
                 <ul class="checklist">
                     <li><b>Home vs Away</b></li>
-                    <li><%= matchData[1] %></li>
-                    <li><%= matchData[2] %></li>
-                    <li><%= matchData[3] %></li>
-                    <li><%= matchData[4] %></li>
-                    <li><%= matchData[5] %></li>
-                    <li><%= matchData[6] %></li>
+                    <li><img src=images/<%= TeamA[1] %>Icon.svg width='25px' height='25px' /><%= matchData[1] %><img src=images/<%= TeamB[1] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[2] %>Icon.svg width='25px' height='25px' /><%= matchData[2] %><img src=images/<%= TeamB[2] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[3] %>Icon.svg width='25px' height='25px' /><%= matchData[3] %><img src=images/<%= TeamB[3] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[4] %>Icon.svg width='25px' height='25px' /><%= matchData[4] %><img src=images/<%= TeamB[4] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[5] %>Icon.svg width='25px' height='25px' /><%= matchData[5] %><img src=images/<%= TeamB[5] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[6] %>Icon.svg width='25px' height='25px' /><%= matchData[6] %><img src=images/<%= TeamB[6] %>Icon.svg width='25px' height='25px' /></li>
                 </ul>
             </div>
             <div>
@@ -112,12 +118,12 @@
             <div>
                 <ul class="checklist">
                     <li><b>Home vs Away</b></li>
-                    <li><%= matchData[7] %></li>
-                    <li><%= matchData[8] %></li>
-                    <li><%= matchData[9] %></li>
-                    <li><%= matchData[10] %></li>
-                    <li><%= matchData[11] %></li>
-                    <li><%= matchData[12] %></li>
+                    <li><img src=images/<%= TeamA[7] %>Icon.svg width='25px' height='25px' /><%= matchData[7] %><img src=images/<%= TeamB[7] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[8] %>Icon.svg width='25px' height='25px' /><%= matchData[8] %><img src=images/<%= TeamB[8] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[9] %>Icon.svg width='25px' height='25px' /><%= matchData[9] %><img src=images/<%= TeamB[9] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[10] %>Icon.svg width='25px' height='25px' /><%= matchData[10] %><img src=images/<%= TeamB[10] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[11] %>Icon.svg width='25px' height='25px' /><%= matchData[11] %><img src=images/<%= TeamB[11] %>Icon.svg width='25px' height='25px' /></li>
+                    <li><img src=images/<%= TeamA[12] %>Icon.svg width='25px' height='25px' /><%= matchData[12] %><img src=images/<%= TeamB[12] %>Icon.svg width='25px' height='25px' /></li>
                 </ul>
             </div>
         </div>
@@ -125,6 +131,7 @@
     <!--================================================================
         News/Updates Section
     =================================================================-->
+    <% if(clubName != "All Clubs") { %>
     <div id="news" class="wrapper newsbox alt">
         <div class="inner">
             <div class="spotlight">
@@ -140,11 +147,12 @@
                     <img src="images/pic02.jpg" alt="" />
                 </div>
                 <div class="content">
-                    <p><a href="/p<%=clubName %>" class="button alt">See the players that played this season.</a></p>
+                    <p><a href="/t<%=clubName %>" class="button alt">See the players that played this season.</a></p>
                 </div>
             </div>
         </div>
     </div>
+    <% } %>
     <!--================================================================
         Footer
     =================================================================-->
@@ -154,5 +162,4 @@
         </div>
     </footer>
 </body>
-
 </html>

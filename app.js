@@ -9,7 +9,8 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.json());
 const port = 8008;
 
 var connection = mysql.createConnection({host : '178.128.37.54', user : 'wcp12_test',  password : 'firestar0218', database: "wcp12_week1", dateStrings:false});
@@ -29,6 +30,19 @@ app.set('view engine', 'ejs');
 
 
 app.get('/welcome', (req, res) => {
+    
+    if(req.session.loggedin){
+        connection.query("SELECT * FROM GameData WHERE TeamAName= ? OR TeamBName= ? ORDER BY GameDate DESC LIMIT 13",[req.session.team, req.session.team], function (err, result) {
+                if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+                var welcomeData=[];
+                for(i = 0; i < 12 ; i++){
+                    welcomeData.push(String(result[i].GameDate).substr(0,15)+": "+result[i].TeamAName+" "+result[i].TeamAScore+"-"+result[i].TeamBScore+" "+result[i].TeamBName);
+                }
+                res.render('welcome', {data: welcomeData, user: req.session.username, team: req.session.team, log: true});
+        });
+    }
+    else
+    {
     connection.query("SELECT * FROM GameData ORDER BY GameDate DESC LIMIT 13", function (err, result) {
                 
                 if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
@@ -36,8 +50,9 @@ app.get('/welcome', (req, res) => {
                 for(i = 0; i < 12 ; i++){
                     welcomeData.push(String(result[i].GameDate).substr(0,15)+": "+result[i].TeamAName+" "+result[i].TeamAScore+"-"+result[i].TeamBScore+" "+result[i].TeamBName);
                 }
-                res.render('welcome', {data: welcomeData});
+                res.render('welcome', {data: welcomeData, user: null, team: null, log: false} );
                 });
+    }
 });
 app.get('/@*', (req, res) => {
             var teamToLookUp=decodeURI(req.url.substr(2));
@@ -47,11 +62,15 @@ app.get('/@*', (req, res) => {
                 if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
                 var date=[];
                 var matchesData=[];
+                var TeamAIcon=[];
+                var TeamBIcon=[];
                 for(i = 0; i < 13 ; i++){
                     date.push(String(result[i].GameDate).substr(0,15));
                     matchesData.push(result[i].TeamAName+" "+result[i].TeamAScore+"-"+result[i].TeamBScore+" "+result[i].TeamBName);
+                    TeamAIcon.push(result[i].TeamAName.replace(/\s+/g, '_'));
+                    TeamBIcon.push(result[i].TeamBName.replace(/\s+/g, '_'));
                 }
-                res.render('index', {dates: date, matchData: matchesData, clubName: "All Clubs"});
+                res.render('index', {dates: date, matchData: matchesData, clubName: "All Clubs", TeamA: TeamAIcon, TeamB: TeamBIcon, log: req.session.loggedin, user: req.session.username});
                 });
             }else{
             connection.query("SELECT * FROM GameData WHERE TeamAName= ? OR TeamBName= ? ORDER BY GameDate DESC LIMIT 13",[teamToLookUp, teamToLookUp], function (err, result) {
@@ -60,11 +79,15 @@ app.get('/@*', (req, res) => {
                 if(result.length === 0) return res.render('error', {error: teamToLookUp+" does not exist within the league!"});
                 var date=[];
                 var matchesData=[];
+                var TeamAIcon=[];
+                var TeamBIcon=[];
                 for(i = 0; i < 13 ; i++){
                     date.push(String(result[i].GameDate).substr(0,15));
                     matchesData.push(result[i].TeamAName+" "+result[i].TeamAScore+"-"+result[i].TeamBScore+" "+result[i].TeamBName);
+                    TeamAIcon.push(result[i].TeamAName.replace(/\s+/g, '_'));
+                    TeamBIcon.push(result[i].TeamBName.replace(/\s+/g, '_'));
                 }
-                res.render('index', {dates: date, matchData: matchesData, clubName: teamToLookUp});
+                res.render('index', {dates: date, matchData: matchesData, clubName: teamToLookUp, TeamA: TeamAIcon, TeamB: TeamBIcon, log: req.session.loggedin, user: req.session.username});
                 });
             }
 });
@@ -76,14 +99,18 @@ app.get('/s*', (req, res) =>{
                 if(result===0) return res.render('error', {error: teamToLookUp+" does not exist in the league!"});
                 var seasonData=[];
                 var dates=[];
+                var TeamAIcon=[];
+                var TeamBIcon=[];
                 for(i = 0; i < result.length ; i++){
                     seasonData.push(result[i].TeamAName+" "+result[i].TeamAScore+"-"+result[i].TeamBScore+" "+result[i].TeamBName);
                     dates.push(String(result[i].GameDate).substr(0,15));
+                    TeamAIcon.push(result[i].TeamAName.replace(/\s+/g, '_'));
+                    TeamBIcon.push(result[i].TeamBName.replace(/\s+/g, '_'));
                 }
-                res.render('fullSeasonMatch', {data: seasonData, matchDate: dates, clubName: teamToLookUp});
+                res.render('fullSeasonMatch', {data: seasonData, matchDate: dates, clubName: teamToLookUp,  TeamA: TeamAIcon, TeamB: TeamBIcon, log: req.session.loggedin, user: req.session.username});
                 });
 });
-app.get('/p*', (req, res) =>{
+app.get('/t*', (req, res) =>{
    var teamToLookUp=decodeURI(req.url.substr(2));
    connection.query("SELECT * FROM playerData WHERE playerTeam= ?", teamToLookUp, function(err, result){
       if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
@@ -96,8 +123,8 @@ app.get('/p*', (req, res) =>{
           playerRoles.push(result[i].playerRole);
           playerOrigin.push(result[i].playerOrigin);
       }
-      res.render('fullSquad', {name: playerNames, role: playerRoles, origin: playerOrigin, clubName: teamToLookUp});
-   });
+      res.render('fullSquad', {name: playerNames, role: playerRoles, origin: playerOrigin, clubName: teamToLookUp, numOfSplits: Math.floor(result.length/6), log: req.session.loggedin, user: req.session.username});
+   })
 });
 app.get('/login', (req, res) => {
     res.render('login');
@@ -105,16 +132,65 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 });
-app.get('/profile', (req, res) => {
-    res.render('profile');
+app.post('/login', (req, res) => {
+   username = req.body.username;
+   password = req.body.password;
+   connection.query("SELECT * FROM users WHERE username= ? AND password= ?", [username, password], function(err, result){
+       if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+       if(result.length != 0){
+           req.session.loggedin=true;
+           req.session.username = username;
+           req.session.team=result[0].favouriteTeam;
+           return res.redirect("/@"+req.session.team);
+       }else{
+       return res.render('error', {error: "That Account does not exist"});
+       }
+   })
 });
-app.post('/register', function(req, res) {
-    let sql = `INSERT INTO users(username, password) VALUES(req.body.username, req.body.password)`;
-  connection.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
-  res.redirect('/welcome');
+app.post('/register', (req, res) => {
+   var username=req.body.username;
+   var password=req.body.password;
+   var confirm=req.body.passwordresubmit;
+   
+   if(!(password===confirm)){
+      res.render('error', {error: "The passwords do not match, please correctly re-enter your passwords"});
+   }
+   connection.query("SELECT * FROM users WHERE username= ?", [username], function(err, result){
+       if(result.length === 0){
+    connection.query("INSERT INTO users (username, password, favouriteTeam, initialNumClubPage) VALUES (?, ?, ?, ?)",[username, password, "Brighton", 0], function(err, result){
+        if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+        return res.redirect("/login");
+    })
+       }else{
+       return res.render('error', {error: "An Account with that username already exists!"});
+       }
+   })
+});
+app.post('/logout', (req,res) =>{
+    req.session.loggedin=false;
+    req.session.username=null;
+    res.redirect('/welcome');
+});
+app.post('/delete', (req, res) =>{
+    connection.query("DELETE FROM users WHERE username= ?",[req.session.username], function(err, result){
+        if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+        req.session.loggedin=false;
+        req.session.username=null;
+        res.redirect("/welcome");
+    })
+});
+app.get('/profile', (req, res) => {
+    if(req.session.loggedin === false){
+        res.redirect('/welcome');
+    };
+    res.render('profile', {user: req.session.username, team: req.session.team});
+});
+app.post('/updateSettings', (req, res) =>{
+    connection.query("UPDATE users SET favouriteTeam = ? WHERE username = ?", [req.body.team, req.session.username], function(err, result){
+    if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+    req.session.team=req.body.team;
+    return res.redirect('/welcome');
+    });
 });
 // Listen on Port 5000
 app.listen(port, () => console.info(`App listening on port ${port}`));

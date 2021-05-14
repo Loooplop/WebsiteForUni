@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title><%= clubName %></title>
+    <title>Welcome <%= user %></title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--================================================================
@@ -18,14 +18,16 @@
         Navigation Bar
     =================================================================-->
     <nav id="navbar">
-        <% if (log == false) { %>
-            <a href="/@<%= clubName %>">Return Back to Club Page</a>
+        
+        <% if (user == null) { %>
+            <a href="/@all">Click Here to See Match Results</a>
             <a href="/register" class="rightsideText">Sign Up</a>
             <a href="/login" class="rightsideText">Log in</a>
         <% } else {%>
-            <a href="/@<%= clubName %>">Return Back to Club Page</a>
+            <a href="/@all">Click Here to See Match Results</a>
             <a href="/profile" class="rightsideText">Profile:<%= user %></a>
         <% } %>
+        
     </nav>
     <!--================================================================
         Intro/Logo
@@ -39,17 +41,30 @@
         Previous Matches
     =================================================================-->
     <div id="previousmatches" class="wrapper">
-        <h2>All Match Results This Season for <%= clubName %></h2>
+        <h2>Recent Match Results</h2>
+        <div class="inner split2">
             <div>
                 <ul class="checklist">
-                     <% for(let i =0;i < data.length; i++){ %>
-                        <li> <%= matchDate[i] %> </li>
-                        <li><img src=images/<%= TeamA[i] %>Icon.svg width='35px' height='40px' /><%= data[i] %><img src=images/<%= TeamB[i] %>Icon.svg width='35px' height='40px' /></li>
-                        <li> ~~~~~~~~~~~~~~~~~~~~~</li>
-                     <% } %>
+                    <li><%= data[0] %></li>
+                    <li><%= data[1] %></li>
+                    <li><%= data[2] %></li>
+                    <li><%= data[3] %></li>
+                    <li><%= data[4] %></li>
+                    <li><%= data[5] %></li>
                 </ul>
             </div>
-        
+            <div>
+                <ul class="checklist">
+                    <li><%= data[6] %></li>
+                    <li><%= data[7] %></li>
+                    <li><%= data[8] %></li>
+                    <li><%= data[9] %></li>
+                    <li><%= data[10] %></li>
+                    <li><%= data[11] %></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </body>
+
 </html>

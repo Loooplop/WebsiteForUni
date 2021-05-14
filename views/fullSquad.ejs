@@ -18,9 +18,14 @@
         Navigation Bar
     =================================================================-->
     <nav id="navbar">
-        <a href="/@<%= clubName %>">Return Back to Club Page</a>
-        <a href="/register" class="rightsideText">Sign Up</a>
-        <a href="/login" class="rightsideText">Log in</a>
+        <% if (log == false) { %>
+            <a href="/@<%= clubName %>">Return Back to Club Page</a>
+            <a href="/register" class="rightsideText">Sign Up</a>
+            <a href="/login" class="rightsideText">Log in</a>
+        <% } else {%>
+            <a href="/@<%= clubName %>">Return Back to Club Page</a>
+            <a href="/profile" class="rightsideText">Profile:<%= user %></a>
+        <% } %>
     </nav>
     <!--================================================================
         Intro/Logo
@@ -35,7 +40,7 @@
     =================================================================-->
     <div id="previousmatches" class="wrapper">
         <h2>The Players that Represented <%= clubName %></h2>
-        <% for(let i=0;i < name.length/6; i++){ %>
+        <% for(let i=0;i < numOfSplits; i++){ %>
         <div class="inner split4">
             <div>
                 <ul class="checklist">
@@ -79,6 +84,36 @@
             </div>
         </div>
         <% } %>
+        <div class="inner split4">
+            <div>
+                <ul class="checklist">
+                    <% for(let i= numOfSplits*6; i < name.length; i++) { %>
+                    <li>Image</li>
+                    <% } %>
+                </ul>
+            </div>
+            <div>
+                <ul class="checklist">
+                    <% for(let i= numOfSplits*6; i < name.length; i++) { %>
+                    <li><%= name[i*6] %></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div>
+                <ul class="checklist">
+                    <% for(let i= numOfSplits*6; i < name.length; i++) { %>
+                    <li><%= role[i*6] %></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div>
+                <ul class="checklist">
+                    <% for(let i= numOfSplits*6; i < name.length; i++) { %>
+                    <li><%= origin[i*6] %></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
     </div>
 </body>
 </html>
