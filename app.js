@@ -136,7 +136,7 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 });
-app.post('/login', async (req, res) => {
+app.post('/login',(req, res) => {
    username = req.body.username;
    password = req.body.password;
    connection.query("SELECT * FROM users WHERE username= ?", [username], function(errs, result){
@@ -148,7 +148,7 @@ app.post('/login', async (req, res) => {
            req.session.team=result[0].favouriteTeam;
            res.redirect("/@"+req.session.team);
            }else{
-        return res.render('error', {error: Wrong password entered."});
+        return res.render('error', {error: "Wrong password entered."});
            }
        }
        else
