@@ -7,8 +7,12 @@ const app = express();
 app.use(session({
 	secret: 'secret',
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
+	loggedin: false
 }));
+const {
+  createHash,
+} = require('crypto');
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 const port = 8008;
@@ -132,20 +136,26 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 });
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
    username = req.body.username;
    password = req.body.password;
-   connection.query("SELECT * FROM users WHERE username= ? AND password= ?", [username, password], function(err, result){
-       if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
+   connection.query("SELECT * FROM users WHERE username= ?", [username], function(errs, result){
+       if(errs) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+errs});
        if(result.length != 0){
+           if(result[0].password===createHash('sha256').update(password).digest('hex')){
            req.session.loggedin=true;
-           req.session.username = username;
+           req.session.username=username;
            req.session.team=result[0].favouriteTeam;
-           return res.redirect("/@"+req.session.team);
-       }else{
+           res.redirect("/@"+req.session.team);
+           }else{
+        return res.render('error', {error: Wrong password entered."});
+           }
+       }
+       else
+       {
        return res.render('error', {error: "That Account does not exist"});
        }
-   })
+       })
 });
 app.post('/register', (req, res) => {
    var username=req.body.username;
@@ -157,7 +167,7 @@ app.post('/register', (req, res) => {
    }
    connection.query("SELECT * FROM users WHERE username= ?", [username], function(err, result){
        if(result.length === 0){
-    connection.query("INSERT INTO users (username, password, favouriteTeam, initialNumClubPage) VALUES (?, ?, ?, ?)",[username, password, "Brighton", 0], function(err, result){
+    connection.query("INSERT INTO users (username, password, favouriteTeam, initialNumClubPage) VALUES (?, ?, ?, ?)",[username, createHash('sha256').update(password).digest('hex'), "Brighton", 0], function(err, result){
         if(err) return res.render('error', {error: "An error has occured on the database, please forward this to the admin: "+err});
         return res.redirect("/login");
     })
